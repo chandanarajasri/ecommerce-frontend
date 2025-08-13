@@ -1,17 +1,31 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:9090/back1/auth";
-
-export const login = async (username, password) => {
-  const response = await axios.post(`${API_URL}/login`, { username, password });
-  localStorage.setItem("token", response.data);
-  return response.data;
+export const signup = (username, email, password) => {
+  return fetch("http://localhost:9090/auth/signup", {  // ✅ correct endpoint
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, email, password }),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Signup failed");
+    }
+    return response.text();
+  });
 };
 
-export const signup = async (username, email, password) => {
-  return axios.post(`${API_URL}/signup`, { username, email, password });
-};
-
-export const logout = () => {
-  localStorage.removeItem("token");
+export const login = (username, password) => {
+  return fetch("http://localhost:9090/auth/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ username, password }),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error("Login failed");
+    }
+    return response.text();
+  });
 };
